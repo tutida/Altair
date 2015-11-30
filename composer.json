@@ -1,6 +1,6 @@
 {
-    "name": "your-name-here/Altair",
-    "description": "Altair plugin for CakePHP",
+    "name": "tutida/altair",
+    "description": "Auto converting special characters of variables to HTML entities",
     "type": "cakephp-plugin",
     "require": {
         "php": ">=5.4.16",
