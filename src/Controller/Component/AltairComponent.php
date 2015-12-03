@@ -49,7 +49,7 @@ class AltairComponent extends Component
      */
     public function startup($event)
     {
-        $event->subject->helpers = [
+        $event->subject->helpers += [
             'Altair.Escape' => [
                 'charset' => $this->_charset
             ],
