@@ -127,6 +127,9 @@ class EscapeHelper extends Helper
         if (!is_object($value)) {
             return $value;
         }
+        if (isset($value->escape) && $value->escape === false) {
+            return $value;
+        }
 
         if ($this->_hasIterator($value)) {
             foreach ($value as $entityObj) {
