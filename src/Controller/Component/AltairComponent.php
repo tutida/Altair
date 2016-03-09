@@ -52,9 +52,6 @@ class AltairComponent extends Component
         $event->subject->helpers += [
             'Altair.Escape' => [
                 'charset' => $this->_charset
-            ],
-            'Form' => [
-                'className' => 'Altair.DecodeForm'
             ]
         ];
     }

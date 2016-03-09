@@ -6,9 +6,10 @@ Auto converting special characters of variables to HTML entities
 * PHP >=5.4.16
 * CakePHP >= ~3.0
 
-## uses
+## Usage
 
-```
+```php
+<?php
     class AppController extends Controller
     {
 
@@ -16,6 +17,8 @@ Auto converting special characters of variables to HTML entities
         {
             $this->loadComponent('Altair.Altair');
         }
+        ...
+    }
 ```
 
 By doing above,
@@ -23,3 +26,23 @@ You do not have to write the following(h()) every time.
 ```
 <?= h($variable); ?>
 ```
+
+If you do not want to escape `$object`, use `$object->escape` property.
+
+```php
+<?php
+    class UsersController extends AppController
+    {
+
+        public function add()
+        {
+            $user = $this->Users->newEntity();
+            ...
+            $user->escape = false;
+            $this->set('user', $user);
+        }
+        ...
+    }
+```
+
+
