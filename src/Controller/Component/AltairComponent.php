@@ -45,7 +45,7 @@ class AltairComponent extends Component
      * start up
      * Set helpers in controller
      *
-     * @param Event $evet
+     * @param Event $event
      */
     public function startup($event)
     {
