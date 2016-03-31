@@ -3,6 +3,7 @@ namespace Altair\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
+use Cake\Core\Configure;
 
 /**
  * Altair component
@@ -29,7 +30,8 @@ class AltairComponent extends Component
      */
     protected $_defaultConfig = [
         'charset' => null,
-        'double' => true
+        'double' => true,
+        'escape' => true
     ];
 
     /**
@@ -42,6 +44,8 @@ class AltairComponent extends Component
     {
         $this->_charset = $this->_config['charset'];
         $this->_double = $this->_config['double'];
+        $this->_escape = $this->_config['escape'];
+        Configure::write('Altair.escape', $this->_config['escape']);
     }
 
     /*
@@ -55,8 +59,24 @@ class AltairComponent extends Component
         $event->subject->helpers += [
             'Altair.Escape' => [
                 'charset' => $this->_charset,
-                'double' => $this->_double
+                'double' => $this->_double,
+                'escape' => $this->_escape
             ]
         ];
+    }
+
+    /**
+     * escap on/off
+     *
+     * @return
+     */
+    public function escape($enabled = true)
+    {
+        if (!is_bool($enabled)) {
+            return false;
+        }
+        $this->_config['escape'] = $enabled;
+        Configure::write('Altair.escape', $this->_config['escape']);
+        return true;
     }
 }

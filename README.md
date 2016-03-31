@@ -45,4 +45,23 @@ If you do not want to escape `$object`, use `$object->escape` property.
     }
 ```
 
+If you do not want to escape in the action, use `$this->Altair->escape()` method.
+
+```php
+<?php
+    class UsersController extends AppController
+    {
+
+        public function add()
+        {
+            $user = $this->Users->newEntity();
+            ...
+            // Not escape $viewVars in this action.
+            $this->Altair->escape(false);
+            $this->set('user', $user);
+        }
+        ...
+    }
+```
+
 
