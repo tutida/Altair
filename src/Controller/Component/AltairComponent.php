@@ -20,6 +20,7 @@ class AltairComponent extends Component
      * @var string
      */
     private $_charset;
+    private $_double;
 
     /**
      * Default configuration.
@@ -27,7 +28,8 @@ class AltairComponent extends Component
      * @var array
      */
     protected $_defaultConfig = [
-        'charset' => 'UTF-8'
+        'charset' => null,
+        'double' => true
     ];
 
     /**
@@ -39,6 +41,7 @@ class AltairComponent extends Component
     public function initialize(array $config)
     {
         $this->_charset = $this->_config['charset'];
+        $this->_double = $this->_config['double'];
     }
 
     /*
@@ -51,7 +54,8 @@ class AltairComponent extends Component
     {
         $event->subject->helpers += [
             'Altair.Escape' => [
-                'charset' => $this->_charset
+                'charset' => $this->_charset,
+                'double' => $this->_double
             ]
         ];
     }
