@@ -3,6 +3,7 @@ namespace Altair\View\Helper;
 
 use Cake\View\Helper;
 use Cake\View\View;
+use Cake\Core\Configure;
 
 /**
  * Escape helper
@@ -19,6 +20,7 @@ class EscapeHelper extends Helper
      */
     private $_charset;
     private $_double;
+    private $_escape;
 
     /**
      * Default configuration.
@@ -38,6 +40,7 @@ class EscapeHelper extends Helper
         parent::__construct($view, $config);
         $this->_charset = $this->_config['charset'];
         $this->_double = $this->_config['double'];
+        $this->_escape = $this->_config['escape'];
     }
 
 
@@ -50,8 +53,10 @@ class EscapeHelper extends Helper
      */
     public function beforeRender($event, $viewFile)
     {
-        $viewVars = $event->subject->viewVars;
-        $viewVars = $this->automate($viewVars);
+        if(Configure::read('Altair.escape')) {
+            $viewVars = $event->subject->viewVars;
+            $viewVars = $this->automate($viewVars);
+        }
     }
 
     /**
