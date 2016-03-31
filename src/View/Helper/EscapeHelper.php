@@ -18,6 +18,7 @@ class EscapeHelper extends Helper
      * @var string
      */
     private $_charset;
+    private $_double;
 
     /**
      * Default configuration.
@@ -35,8 +36,8 @@ class EscapeHelper extends Helper
     public function __construct(View $view, $config = [])
     {
         parent::__construct($view, $config);
-
         $this->_charset = $this->_config['charset'];
+        $this->_double = $this->_config['double'];
     }
 
 
@@ -86,7 +87,7 @@ class EscapeHelper extends Helper
             return $text;
         }
 
-        return htmlspecialchars($text, ENT_NOQUOTES, $this->_charset);
+        return h($text, $this->_double, $this->_charset);
     }
 
     /**
