@@ -139,6 +139,7 @@ class EscapeHelper extends Helper
         }
         if ($value instanceof Entity) {
             $errors = $value->errors();
+            $invalid = $value->invalid();
         }
         if ($this->_hasIterator($value)) {
             foreach ($value as $entityObj) {
@@ -152,6 +153,7 @@ class EscapeHelper extends Helper
         }
         if ($value instanceof Entity) {
             $value->errors($errors);
+            $value->invalid($invalid);
         }
 
         return $value;
