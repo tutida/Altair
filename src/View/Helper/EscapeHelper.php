@@ -4,6 +4,7 @@ namespace Altair\View\Helper;
 use Cake\View\Helper;
 use Cake\View\View;
 use Cake\Core\Configure;
+use Cake\ORM\Entity;
 
 /**
  * Escape helper
@@ -136,7 +137,10 @@ class EscapeHelper extends Helper
         if (isset($value->escape) && $value->escape === false) {
             return $value;
         }
-
+        if ($value instanceof Entity) {
+            $errors = $value->errors();
+            $invalid = $value->invalid();
+        }
         if ($this->_hasIterator($value)) {
             foreach ($value as $entityObj) {
                 $entityObj = $this->_objectEscape($entityObj);
@@ -146,6 +150,10 @@ class EscapeHelper extends Helper
             foreach ($entityArray as $key => $prop) {
                 $value->$key = $this->_h($prop);
             }
+        }
+        if ($value instanceof Entity) {
+            $value->errors($errors);
+            $value->invalid($invalid);
         }
 
         return $value;
