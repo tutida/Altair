@@ -14,39 +14,18 @@ use Cake\ORM\Entity;
 class EscapeHelper extends Helper
 {
     /**
-     * An optional argument defining the encoding used when converting characters
-     * default UTF-8
-     *
-     * @var string
-     */
-    private $_charset;
-    private $_double;
-    private $_escape;
-
-    /**
      * Default configuration.
      *
      * @var array
      */
-    protected $_defaultConfig = [];
+    protected $_defaultConfig = [
+        'charset' => null,
+        'double' => true,
+        'escape' => true
+    ];
 
     /**
      * beforeRender
-     *
-     * @param View $view
-     * @param array $config
-     */
-    public function __construct(View $view, $config = [])
-    {
-        parent::__construct($view, $config);
-        $this->_charset = $this->_config['charset'];
-        $this->_double = $this->_config['double'];
-        $this->_escape = $this->_config['escape'];
-    }
-
-
-    /**
-     * BeforeRender
      * Get the variables that are set in the object
      *
      * @param Eevent $event
@@ -69,30 +48,30 @@ class EscapeHelper extends Helper
     private function automate($viewVars)
     {
         foreach ($viewVars as $key => $var) {
-            if (is_string($var)) {
-                $viewVars[$key] = $this->_stringEscape($var);
-            } else if (is_array($var)) {
-                $viewVars[$key] = $this->_arrayEscape($var);
-            } else if (is_object($var)) {
-                $viewVars[$key] = $this->_objectEscape($var);
-            } else {
-                $viewVars[$key] = $var;
-            }
+            $viewVars[$key] = $this->escape($var);
         }
         return $viewVars;
     }
 
+    private function escape($value)
+    {
+        if (is_string($value)) {
+            $value = $this->escapeString($value);
+        } else if (is_array($value)) {
+            $value = $this->escapeArray($value);
+        } else if (is_object($value)) {
+            $value = $this->escapeObject($value);
+        }
+        return $value;
+    }
+
     /**
-     * _h
+     * h
      *
      * @param string $text Text to escape
      * @return string escaped text
      */
-    private function _h($text) {
-        if (!is_string($text)) {
-            return $text;
-        }
-
+    private function h($text) {
         return h($text, $this->_double, $this->_charset);
     }
 
@@ -102,8 +81,8 @@ class EscapeHelper extends Helper
      * @param string $value
      * @return string escaped text
      */
-    private function _stringEscape($value) {
-        return $this->_h($value);
+    private function escapeString($value) {
+        return $this->h($value);
     }
 
     /**
@@ -112,16 +91,14 @@ class EscapeHelper extends Helper
      * @param array $value
      * @return array escaped array
      */
-    private function _arrayEscape($value) {
-        if (is_array($value)) {
-            return array_map(array($this, '_arrayEscape'), $value);
+    private function escapeArray($value) {
+        if (!is_array($value)) {
+            return $this->escape($value);
         }
-
-        if (!is_string($value)) {
-            return $value;
+        foreach ($value as $key => $prop) {
+            $value[$key] = $this->escape($prop);
         }
-
-        return $this->_h($value);
+        return $value;
     }
 
     /**
@@ -130,7 +107,7 @@ class EscapeHelper extends Helper
      * @param Object $value
      * @return Object escaped object
      */
-    private function _objectEscape($value) {
+    private function escapeObject($value) {
         if (!is_object($value)) {
             return $value;
         }
@@ -140,20 +117,25 @@ class EscapeHelper extends Helper
         if ($value instanceof Entity) {
             $errors = $value->errors();
             $invalid = $value->invalid();
-        }
-        if ($this->_hasIterator($value)) {
-            foreach ($value as $entityObj) {
-                $entityObj = $this->_objectEscape($entityObj);
+            $properties = $value->visibleProperties();
+            foreach ($properties as $prop) {
+                $value->{$prop} = $this->escape($value->{$prop});
             }
-        } else {
-            $entityArray = $value->toArray();
-            foreach ($entityArray as $key => $prop) {
-                $value->$key = $this->_h($prop);
-            }
-        }
-        if ($value instanceof Entity) {
             $value->errors($errors);
             $value->invalid($invalid);
+            return $value;
+        }
+
+        if ($this->hasIterator($value)) {
+            foreach ($value as $key => $prop) {
+                $value->{$key} = $this->escape($prop);
+            }
+            return $value;
+        }
+
+        $entityArray = $value->toArray();
+        foreach ($entityArray as $key => $prop) {
+            $value->$key = $this->h($prop);
         }
 
         return $value;
@@ -164,7 +146,7 @@ class EscapeHelper extends Helper
      * @param Object $obj
      * @return bool $hasIterator
      */
-    private function _hasIterator($obj) {
+    private function hasIterator($obj) {
         $hasIterator = false;
         foreach ($obj as $key => $dummy) {
             $hasIterator = true;

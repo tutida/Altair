@@ -13,23 +13,13 @@ use Cake\Core\Configure;
  */
 class AltairComponent extends Component
 {
-
-    /**
-     * An optional argument defining the encoding used when converting characters
-     * default UTF-8
-     *
-     * @var string
-     */
-    private $_charset;
-    private $_double;
-
     /**
      * Default configuration.
      *
      * @var array
      */
     protected $_defaultConfig = [
-        'charset' => null,
+        'charset' => 'UTF-8',
         'double' => true,
         'escape' => true
     ];
@@ -42,10 +32,7 @@ class AltairComponent extends Component
      */
     public function initialize(array $config)
     {
-        $this->_charset = $this->_config['charset'];
-        $this->_double = $this->_config['double'];
-        $this->_escape = $this->_config['escape'];
-        Configure::write('Altair.escape', $this->_config['escape']);
+        Configure::write('Altair.escape', $this->config('escape'));
     }
 
     /*
@@ -57,16 +44,12 @@ class AltairComponent extends Component
     public function startup($event)
     {
         $event->subject->helpers += [
-            'Altair.Escape' => [
-                'charset' => $this->_charset,
-                'double' => $this->_double,
-                'escape' => $this->_escape
-            ]
+            'Altair.Escape' => $this->config()
         ];
     }
 
     /**
-     * escap on/off
+     * escape on/off
      *
      * @return
      */
@@ -75,8 +58,8 @@ class AltairComponent extends Component
         if (!is_bool($enabled)) {
             return false;
         }
-        $this->_config['escape'] = $enabled;
-        Configure::write('Altair.escape', $this->_config['escape']);
+        $this->config('escape', $enabled);
+        Configure::write('Altair.escape', $this->config('escape'));
         return true;
     }
 }
