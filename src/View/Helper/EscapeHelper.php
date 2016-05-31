@@ -133,11 +133,6 @@ class EscapeHelper extends Helper
             return $value;
         }
 
-        $entityArray = $value->toArray();
-        foreach ($entityArray as $key => $prop) {
-            $value->$key = $this->h($prop);
-        }
-
         return $value;
     }
     /**
