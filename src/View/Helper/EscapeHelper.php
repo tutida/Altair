@@ -118,7 +118,8 @@ class EscapeHelper extends Helper
             $invalid = $value->invalid();
             $properties = $value->visibleProperties();
             foreach ($properties as $prop) {
-                $value->{$prop} = $this->escape($value->{$prop});
+                // To not use the entity setter
+                $value->set($prop, $this->escape($value->{$prop}), ['setter' => false]);
             }
             $value->errors($errors);
             $value->invalid($invalid);
