@@ -46,9 +46,13 @@ class EscapeHelper extends Helper
      */
     private function automate($viewVars)
     {
+        $rawDataObj = new \stdClass();
         foreach ($viewVars as $key => $var) {
-            $viewVars[$key] = $this->escape($var);
+            $rawDataObj->$key = $var;
+            $viewVars[$key]   = $this->escape($var);
         }
+        $viewVars['raws'] = $rawDataObj;
+
         return $viewVars;
     }
 
