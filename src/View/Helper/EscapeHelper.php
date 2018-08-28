@@ -34,7 +34,7 @@ class EscapeHelper extends Helper
     public function beforeRender($event, $viewFile)
     {
         if(Configure::read('Altair.escape')) {
-            $event->subject->viewVars = $this->automate($event->subject->viewVars);
+            $event->getSubject()->viewVars = $this->automate($event->getSubject()->viewVars);
         }
     }
 

@@ -32,7 +32,7 @@ class AltairComponent extends Component
      */
     public function initialize(array $config)
     {
-        Configure::write('Altair.escape', $this->config('escape'));
+        Configure::write('Altair.escape', $this->getConfig('escape'));
     }
 
     /*
@@ -43,8 +43,8 @@ class AltairComponent extends Component
      */
     public function startup($event)
     {
-        $event->subject->helpers += [
-            'Altair.Escape' => $this->config()
+        $event->getSubject()->helpers += [
+            'Altair.Escape' => $this->getConfig()
         ];
     }
 
@@ -58,8 +58,8 @@ class AltairComponent extends Component
         if (!is_bool($enabled)) {
             return false;
         }
-        $this->config('escape', $enabled);
-        Configure::write('Altair.escape', $this->config('escape'));
+        $this->setConfig('escape', $enabled);
+        Configure::write('Altair.escape', $this->getConfig('escape'));
         return true;
     }
 }
